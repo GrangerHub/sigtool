@@ -4,7 +4,7 @@
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <nettle/bignum.h>
@@ -19,7 +19,7 @@
 struct rsa_public_key public_key;
 struct rsa_private_key private_key;
 
-static void nettle_random(void *ctx, unsigned length, uint8_t *dst)
+static void nettle_random(void *ctx, size_t length, uint8_t *dst)
 {
     unsigned done = 0;
     FILE *f;
