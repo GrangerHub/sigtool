@@ -42,7 +42,8 @@
 struct rsa_public_key public_key;
 struct rsa_private_key private_key;
 
-static void nettle_random(void *ctx, size_t length, uint8_t *dst)
+#define UNUSED __attribute__((unused))
+static void nettle_random(void *ctx UNUSED, size_t length, uint8_t *dst)
 {
     unsigned done = 0;
     FILE *f;
@@ -380,7 +381,7 @@ static bool sign_file(const char *data_path)
     char signature_path[PATH_MAX];
     mpz_t signature;
     FILE *f;
-    int i, len;
+    int len;
     uint8_t *buf, digest[SHA256_DIGEST_SIZE];
     bool is_ok = false;
 
@@ -389,7 +390,7 @@ static bool sign_file(const char *data_path)
     }
 
     sha256_digest(&hash, sizeof(digest), digest);
-    for (i = 0; i < sizeof(digest); i++) {
+    for (size_t i = 0; i < sizeof(digest); i++) {
         printf("%02x", digest[i]);
     }
     printf("\n");
