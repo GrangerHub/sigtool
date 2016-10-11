@@ -1,3 +1,26 @@
+//
+// The MIT License (MIT)
+// 
+// Copyright (c) 2015-2016 Jeff Kent
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +42,8 @@
 struct rsa_public_key public_key;
 struct rsa_private_key private_key;
 
-static void nettle_random(void *ctx, size_t length, uint8_t *dst)
+#define UNUSED __attribute__((unused))
+static void nettle_random(void *ctx UNUSED, size_t length, uint8_t *dst)
 {
     unsigned done = 0;
     FILE *f;
@@ -357,7 +381,7 @@ static bool sign_file(const char *data_path)
     char signature_path[PATH_MAX];
     mpz_t signature;
     FILE *f;
-    int i, len;
+    int len;
     uint8_t *buf, digest[SHA256_DIGEST_SIZE];
     bool is_ok = false;
 
@@ -366,7 +390,7 @@ static bool sign_file(const char *data_path)
     }
 
     sha256_digest(&hash, sizeof(digest), digest);
-    for (i = 0; i < sizeof(digest); i++) {
+    for (size_t i = 0; i < sizeof(digest); i++) {
         printf("%02x", digest[i]);
     }
     printf("\n");
