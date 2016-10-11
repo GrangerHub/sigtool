@@ -301,8 +301,19 @@ static bool load_key(const char *key_path, bool private)
             goto error3;
         }
 
-        while (strlen(password) < BLOWFISH_MIN_KEY_SIZE) {
-            password_prompt(password, sizeof(password));
+        const char *env_password = getenv("SIGTOOL_PASSWORD");
+        if (env_password) {
+            if (strlen(env_password) < BLOWFISH_MIN_KEY_SIZE) {
+                fprintf(stderr, "length of SIGTOOL_PASSWORD does not meet "
+                                "minimum key size\n");
+                exit(EXIT_FAILURE);
+            }
+            strncpy(password, env_password, sizeof(password)-1);
+            password[sizeof(password)-1] = '\0';
+        } else {
+            while (strlen(password) < BLOWFISH_MIN_KEY_SIZE) {
+                password_prompt(password, sizeof(password));
+            }
         }
 
         blowfish_set_key(&blowfish, strlen(password), password);
@@ -489,8 +500,8 @@ error:
 
 static void show_usage(const char *argv0)
 {
-	fprintf(stderr, "Usage: %s -k keyfile { -g [-e] | -s file | "
-	        "-v file }\n", argv0);
+    fprintf(stderr, "Usage: %s -k keyfile { -g [-e] | -s file | "
+            "-v file }\n", argv0);
     fprintf(stderr, "\n");
     fprintf(stderr, "  -k keyfile    public or private key file\n");
     fprintf(stderr, "  -g            generate key pair               "
@@ -502,7 +513,7 @@ static void show_usage(const char *argv0)
             "(private key only)\n");
     fprintf(stderr, "  -v file       verify file                     "
             "(private or public key)\n");
-	exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 int main(int argc, char *argv[])
@@ -520,7 +531,7 @@ int main(int argc, char *argv[])
             encrypt = true;
             break;
 
-	case 'g':
+        case 'g':
         case 'f':
         case 's':
         case 'v':
@@ -532,7 +543,7 @@ int main(int argc, char *argv[])
             data_path = optarg;
             break;
 
-	case 'k':
+        case 'k':
             if (key_path) {
                 fprintf(stderr, "only one keyfile allowed\n");
                 show_usage(argv[0]);
@@ -571,8 +582,8 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
         print_public_key_fingerprint();
-	unload_keys();
-	break;
+        unload_keys();
+        break;
 
     case 's':
         if (!load_key(key_path, true)) {
