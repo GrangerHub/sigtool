@@ -241,9 +241,9 @@ static int rsa_keypair_from_sexp_custom(struct rsa_public_key *pub,
     const uint8_t *expr)
 {
     struct sexp_iterator i;
-    static const uint8_t * const types[2]
+    static const char * const types[2]
         = { "private-key", "public-key" };
-    static const uint8_t * const names[3]
+    static const char * const names[3]
         = { "rsa", "rsa-pkcs1", "rsa-pkcs1-sha1" };
 
     if (!sexp_iterator_first(&i, length, expr))
